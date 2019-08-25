@@ -10,59 +10,57 @@
   - [Install MongoDB Community Edition on Ubuntu](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/)
 
 ```bash
-sudo dpkg -i mongodb-org-server_4.2.0_amd64.deb
+   $ sudo dpkg -i mongodb-org-server_4.2.0_amd64.deb
 ```
 
 - Add these settings to `.bashrc` for personal preference
 
 ```bash
-export APPLICATIONS_HOME="${HOME}/Documents/_applications"
-export MONGODB_HOME="${APPLICATIONS_HOME}/mongodb-linux-x86_64-ubuntu1804-4.2.0"
-export MONGODB_BIN="${MONGODB_HOME}/bin"
+   export APPLICATIONS_HOME="${HOME}/Documents/_applications"
+   export MONGODB_HOME="${APPLICATIONS_HOME}/mongodb-linux-x86_64-ubuntu1804-4.2.0"
+   export MONGODB_BIN="${MONGODB_HOME}/bin"
 
-alias mongo-restart='sudo systemctl restart mongodb'
-alias mongo-start='sudo systemctl start mongodb'
-alias mongo-stop='sudo systemctl stop mongodb'
-alias mongo-status='sudo systemctl status mongodb'
-alias mongo-enable='sudo systemctl enable mongodb'
-alias mongo-disable='sudo systemctl disable mongodb'
+   alias mongo-restart='sudo systemctl restart mongodb'
+   alias mongo-start='sudo systemctl start mongodb'
+   alias mongo-stop='sudo systemctl stop mongodb'
+   alias mongo-status='sudo systemctl status mongodb'
+   alias mongo-enable='sudo systemctl enable mongodb'
+   alias mongo-disable='sudo systemctl disable mongodb'
 ```
 
 - Configure to start `mongodb` automatically with the server
 
 ```bash
-sudo cp mongodb.service /etc/systemd/system
+   $ sudo cp mongodb.service /etc/systemd/system
 ```
 
 - Update the `systemd` service after copying `mongodb` services 
 
 ```bash
-sudo systemctl daemon-reload
+   $ sudo systemctl daemon-reload
 ```
 
 - Enable to auto-start `mongodb` service
 
 ```bash
-mongo-enable
+   $ mongo-enable
 ```
 
 - Start/Re-Start `mongodb` service
 
 ```bash
-mongo-start
-mongo-restart
+   $ mongo-start
+   $ mongo-restart
 ```
 
 - Check `mongodb` version
 
 ```bash
-mongod --version
+   $ mongod --version
 ```
 
-- OR 
-
 ```sql
-db.version()
+   db.version()
 ```
 
 - Issue installing MongoDB in `Ubuntu 18.04`
