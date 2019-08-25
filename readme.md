@@ -1,4 +1,4 @@
-- [MongoDB](https://docs.mongodb.com/manual/)
+- [MongoDB - Cross-platform NoSQL/Document-Oriented DB](https://docs.mongodb.com/manual/)
   - [Documentation](https://docs.mongodb.com/)
   - [Introduction](https://docs.mongodb.com/manual/introduction/)
   - [How to Install MongoDB on Ubuntu 18.04](https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-18-04)
