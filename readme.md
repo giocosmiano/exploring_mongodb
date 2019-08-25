@@ -10,7 +10,7 @@
   - [Install MongoDB Community Edition on Ubuntu](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/)
 
 ```bash
-mongodb-org-server_4.2.0_amd64.deb
+sudo dpkg -i mongodb-org-server_4.2.0_amd64.deb
 ```
 
 - Add these settings to `.bashrc` for personal preference
