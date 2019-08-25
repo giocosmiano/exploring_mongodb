@@ -53,6 +53,18 @@ mongo-start
 mongo-restart
 ```
 
+- Check `mongodb` version
+
+```bash
+mongod --version
+```
+
+- OR 
+
+```sql
+db.version()
+```
+
 - Issue installing MongoDB in `Ubuntu 18.04`
   - [MongoDB Zip Installation Failed in Ubuntu 18.04](https://stackoverflow.com/questions/51006934/mongodb-zip-installation-failed-in-ubuntu-18-04)
 
