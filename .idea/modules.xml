@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/exploring_mongodb_basics.iml" filepath="$PROJECT_DIR$/exploring_mongodb_basics.iml" />
+      <module fileurl="file://$PROJECT_DIR$/in_python/in_python.iml" filepath="$PROJECT_DIR$/in_python/in_python.iml" />
     </modules>
   </component>
 </project>
