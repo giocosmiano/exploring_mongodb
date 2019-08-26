@@ -2,6 +2,7 @@
   - [Documentation](https://docs.mongodb.com/)
   - [Introduction](https://docs.mongodb.com/manual/introduction/)
   - [How to Install MongoDB on Ubuntu 18.04](https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-18-04)
+  - [How to Install and Configure MongoDB on Ubuntu 18.04 LTS](https://www.howtoforge.com/tutorial/install-mongodb-on-ubuntu/)
 
 - Installing `mongodb` in `Ubuntu 18.04 x64`
   - [Download MongoDB Community Server](https://www.mongodb.com/download-center/community)
