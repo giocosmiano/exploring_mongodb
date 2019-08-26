@@ -4,7 +4,8 @@
    $ python3 -m pip install pymongo
 ```
 
-- Connecting to DB
+- Connecting to DB, use [Sample collections for MongoDB](https://github.com/SouthbankSoftware/dbkoda-data)
+  - connecting with credentials -> connect("mongodb://[username:password@]localhost:27017/SampleCollections", alias="sample-collections")
 
 ```bash
    $ python3
