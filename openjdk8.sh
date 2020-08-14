@@ -9,7 +9,7 @@
 
 # Java 11
 # sudo update-java-alternatives -s java-11
-export JAVA_HOME="${APPLICATIONS_HOME}/openjdk-11.0.2"
+export JAVA_HOME="${APPLICATIONS_HOME}/amazon-corretto-8.252.09.1-linux-x64"
 export JAVA_BIN="${JAVA_HOME}/bin"
 
 # Path

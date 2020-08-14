@@ -9,7 +9,7 @@
 
 # Java 11
 # sudo update-java-alternatives -s java-12
-export JAVA_HOME="${APPLICATIONS_HOME}/jdk-12.0.1"
+export JAVA_HOME="${APPLICATIONS_HOME}/openjdk-14.0.1"
 export JAVA_BIN="${JAVA_HOME}/bin"
 
 # Path
