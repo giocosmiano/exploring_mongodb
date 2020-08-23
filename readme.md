@@ -80,7 +80,7 @@
   - [Sample collections for MongoDB](https://github.com/SouthbankSoftware/dbkoda-data)
   - [MongoDB json files](https://github.com/ozlerhakan/mongodb-json-files)
 
-## Connecting Kafka to MongoDB Source
+## Connecting Kafka to MongoDB as Source
   - [How to connect Kafka to MongoDB Source](https://medium.com/tech-that-works/cloud-kafka-connector-for-mongodb-source-8b525b779772)
     - [Setting MongoDB Replica Set](https://www.youtube.com/watch?v=I6J9M0J66jo)
     - [MongoDB Kafka Connect Tutorial | Apache Kafka](https://www.youtube.com/watch?v=AF9WyW4npwY)
@@ -94,11 +94,12 @@
   $ kafka-topics --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic mongoConn.sampleGioDB.books
   $ kafka-topics --list --zookeeper localhost:2181
   $ cd $CONFLUENT_HOME
-  $ bin/connect-standalone etc/schema-registry/connect-avro-standalone.properties etc/kafka/connect-mongodb-source.properties
+  $ bin/connect-standalone  etc/schema-registry/connect-avro-standalone.properties  etc/kafka/connect-mongodb-source.properties  ### This worked so use this 
+  $ bin/connect-distributed etc/schema-registry/connect-avro-distributed.properties etc/kafka/connect-mongodb-source.properties  ### Doesn't work. Still needs to investigate why??? 
   $ kafka-console-consumer --bootstrap-server localhost:9092 --topic mongoConn.sampleGioDB.books  --from-beginning
 ```
 
-## Setting up Mongo to run in replicated instances (replica set)
+## Setting up Mongo to run in replicated instances, replica set (Ideal when Mongo is to be used for Kafka Connector)
   - copy the replicated mongo configurations/services 
 ```bash
    $ sudo cp replicated_mongodb*.conf /etc
@@ -142,7 +143,7 @@ alias mongodb-disable='sudo systemctl disable replicated_mongodb1.service replic
    > rs.status()
 ```
 
-## Setting up Mongo to run in single instance
+## Setting up Mongo to run in single instance (Ideal when Mongo won't be used for Kafka Connector)
   - copy the replicated mongo configuration/service 
 ```bash
    $ sudo cp replicated_mongodb1.conf /etc
@@ -162,4 +163,59 @@ alias mongodb-status='sudo systemctl status replicated_mongodb1.service'
 alias mongodb-enable='sudo systemctl enable replicated_mongodb1.service'
 alias mongodb-disable='sudo systemctl disable replicated_mongodb1.service'
 ```
+
+## Setting up Confluent Kafka Connect Plugins such as Kafka Connector MongoDB Source
+  - [Kafka connect plugin install](https://gquintana.github.io/2019/12/10/Kafka-connect-plugin-install.html)
+  - [How to install connector plugins in Kafka Connect](https://rmoff.net/2020/06/19/how-to-install-connector-plugins-in-kafka-connect/)
+  - Install the needed Kafka Connectors from [Confluent Kafka Connectors Hub](https://www.confluent.io/hub/). e.g.
+```bash
+   $ confluent-hub install confluentinc/kafka-connect-elasticsearch:5.5.1
+   $ confluent-hub install debezium/debezium-connector-mongodb:1.2.1
+   $ confluent-hub install debezium/debezium-connector-mysql:1.2.1
+   $ confluent-hub install mongodb/kafka-connect-mongodb:1.2.0
+   $ confluent-hub install jcustenborder/kafka-connect-redis:0.0.2.11
+   $ confluent-hub install hpgrahsl/kafka-connect-mongodb:1.4.0
+```  
+  - Create `plugins` directory under `$CONFLUENT_HOME`, then create `symlink` from `lib` directory where the `.jar` files are
+```bash
+   $ cd $CONFLUENT_HOME
+   $ mkdir plugins
+   $ cd plugins
+   $ ln -s ../share/confluent-hub-components/confluentinc-kafka-connect-elasticsearch/lib elasticsearch
+   $ ln -s ../share/confluent-hub-components/debezium-debezium-connector-mongodb/lib debezium-mongodb
+   $ ln -s ../share/confluent-hub-components/debezium-debezium-connector-mysql/lib debezium-mysql
+   $ ln -s ../share/confluent-hub-components/mongodb-kafka-connect-mongodb/lib mongodb
+   $ ln -s ../share/confluent-hub-components/jcustenborder-kafka-connect-redis/lib redis
+```
+  - Add the `plugins` path in the following files
+    - $CONFLUENT_HOME/etc/kafka/connect-distributed.properties
+    - $CONFLUENT_HOME/etc/kafka/connect-standalone.properties
+    - $CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties
+    - $CONFLUENT_HOME/etc/schema-registry/connect-avro-standalone.properties
+```properties
+plugin.path=$HOME/Documents/_applications/confluent-5.5.1/share/java,$HOME/Documents/_applications/confluent-5.5.1/share/confluent-hub-components,$HOME/Documents/_applications/confluent-5.5.1/plugins
+```
+  - The above `plugins` .jar files should work but in case it didn't get added to classpath then manually add the `$CLASSPATH` to `.bashrc` e.g.
+```bash
+   export CLASSPATH="$HOME/Documents/_applications/confluent-5.5.1/share/confluent-hub-components/debezium-debezium-connector-mongodb/*"
+```
+
+  - To verify that Mongo is connected to Kafka flowing event stream
+    - use [`Trifecta UI localhost`](http://localhost:8888/)
+    - OR use [Confluent `KSql`](https://docs.ksqldb.io/en/latest/developer-guide/syntax-reference/)
+      - [KSql Quick Reference](https://docs.ksqldb.io/en/latest/developer-guide/ksqldb-reference/quick-reference/)
+      - [KSql Create Stream](https://docs.ksqldb.io/en/latest/developer-guide/ksqldb-reference/create-stream/)
+      - [KSql Print Kafka Topic's Content](https://docs.ksqldb.io/en/latest/developer-guide/ksqldb-reference/print/)
+      - alias confluentKSqlStart='cd ${CONFLUENT_HOME}; bin/ksql-server-start etc/ksqldb/ksql-server.properties'
+```bash
+   $ trifectaStart
+   $ confluentKSqlStart
+   $ ksql
+```   
+```sql
+   ksql> CREATE STREAM sampleGioBooks (id VARCHAR) WITH (kafka_topic='mongoConn.sampleGioDB.books', value_format='JSON');
+   ksql> describe extended sampleGioBooks
+   ksql> print 'mongoConn.sampleGioDB.books' from beginning;
+```
+
     
