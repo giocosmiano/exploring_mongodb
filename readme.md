@@ -90,7 +90,7 @@
       - mongodb.name = mongoConn (see connect-mongodb-source.properties)
       - db name is `sampleGioDB` (in Mongo)
       - collection name is `books` (in Mongo)
-```bash
+```shell script
   $ kafka-topics --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic mongoConn.sampleGioDB.books
   $ kafka-topics --list --zookeeper localhost:2181
   $ cd $CONFLUENT_HOME
@@ -101,19 +101,19 @@
 
 ## Setting up Mongo to run in replicated instances, replica set (Ideal when Mongo is to be used for Kafka Connector)
   - copy the replicated mongo configurations/services 
-```bash
+```shell script
    $ sudo cp replicated_mongodb*.conf /etc
    $ sudo cp replicated_mongodb*.service /etc/systemd/system
    $ sudo systemctl daemon-reload
 ```
   - create DB directories (see replicated_mongodb${n}.conf)
-```bash
+```shell script
    $ mkdir -p $HOME/Documents/_mongoDBData/db1
    $ mkdir -p $HOME/Documents/_mongoDBData/db2
    $ mkdir -p $HOME/Documents/_mongoDBData/db3
 ```
   - As personal preference, add these settings to `.bashrc` mongodb-status, mongodb-start, mongodb-stop, mongodb-restart
-```bash
+```shell script
 alias mongodb-restart='sudo systemctl restart replicated_mongodb1.service replicated_mongodb2.service replicated_mongodb3.service'
 alias mongodb-start='sudo systemctl start replicated_mongodb1.service replicated_mongodb2.service replicated_mongodb3.service'
 alias mongodb-stop='sudo systemctl stop replicated_mongodb1.service replicated_mongodb2.service replicated_mongodb3.service'
@@ -122,20 +122,20 @@ alias mongodb-enable='sudo systemctl enable replicated_mongodb1.service replicat
 alias mongodb-disable='sudo systemctl disable replicated_mongodb1.service replicated_mongodb2.service replicated_mongodb3.service'
 ```
   - Open 3 terminal tabs and run each command to get the host names that will be used for primary/secondary nodes
-```bash
+```shell script
    $ mongo --port 27017  # open in terminal tab 1
    $ mongo --port 27018  # open in terminal tab 2
    $ mongo --port 27019  # open in terminal tab 3
 ```
-```bash
+```sql
    > db.serverStatus()  // find the `host` of the node from each `mongo --port 2701n`
    > db.help()
 ```
   - Setup the replicated instances from master node
-```bash
+```shell script
    $ mongo --port 27017  # this is going to be the primary node
 ```
-```bash
+```sql
    > rs.status()
    > rs.initiate()
    > rs.add("127.0.0.1:27018")  // OR rs.add("gio-Satellite-P70-A:27018") -- based on the host from db.serverStatus()
@@ -145,17 +145,17 @@ alias mongodb-disable='sudo systemctl disable replicated_mongodb1.service replic
 
 ## Setting up Mongo to run in single instance (Ideal when Mongo won't be used for Kafka Connector)
   - copy the replicated mongo configuration/service 
-```bash
+```shell script
    $ sudo cp replicated_mongodb1.conf /etc
    $ sudo cp replicated_mongodb1.service /etc/systemd/system
    $ sudo systemctl daemon-reload
 ```
   - create DB directories (see replicated_mongodb1.conf)
-```bash
+```shell script
    $ mkdir -p $HOME/Documents/_mongoDBData/db1
 ```
   - As personal preference, add these settings to `.bashrc` mongodb-status, mongodb-start, mongodb-stop, mongodb-restart
-```bash
+```shell script
 alias mongodb-restart='sudo systemctl restart replicated_mongodb1.service'
 alias mongodb-start='sudo systemctl start replicated_mongodb1.service'
 alias mongodb-stop='sudo systemctl stop replicated_mongodb1.service'
@@ -168,7 +168,7 @@ alias mongodb-disable='sudo systemctl disable replicated_mongodb1.service'
   - [Kafka connect plugin install](https://gquintana.github.io/2019/12/10/Kafka-connect-plugin-install.html)
   - [How to install connector plugins in Kafka Connect](https://rmoff.net/2020/06/19/how-to-install-connector-plugins-in-kafka-connect/)
   - Install the needed Kafka Connectors from [Confluent Kafka Connectors Hub](https://www.confluent.io/hub/). e.g.
-```bash
+```shell script
    $ confluent-hub install confluentinc/kafka-connect-elasticsearch:5.5.1
    $ confluent-hub install debezium/debezium-connector-mongodb:1.2.1
    $ confluent-hub install debezium/debezium-connector-mysql:1.2.1
@@ -177,7 +177,7 @@ alias mongodb-disable='sudo systemctl disable replicated_mongodb1.service'
    $ confluent-hub install hpgrahsl/kafka-connect-mongodb:1.4.0
 ```  
   - Create `plugins` directory under `$CONFLUENT_HOME`, then create `symlink` from `lib` directory where the `.jar` files are
-```bash
+```shell script
    $ cd $CONFLUENT_HOME
    $ mkdir plugins
    $ cd plugins
@@ -196,7 +196,7 @@ alias mongodb-disable='sudo systemctl disable replicated_mongodb1.service'
 plugin.path=$HOME/Documents/_applications/confluent-5.5.1/share/java,$HOME/Documents/_applications/confluent-5.5.1/share/confluent-hub-components,$HOME/Documents/_applications/confluent-5.5.1/plugins
 ```
   - The above `plugins` .jar files should work but in case it didn't get added to classpath then manually add the `$CLASSPATH` to `.bashrc` e.g.
-```bash
+```shell script
    export CLASSPATH="$HOME/Documents/_applications/confluent-5.5.1/share/confluent-hub-components/debezium-debezium-connector-mongodb/*"
 ```
 
