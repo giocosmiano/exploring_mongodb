@@ -131,7 +131,7 @@ alias mongodb-disable='sudo systemctl disable replicated_mongodb1.service replic
    > db.serverStatus()  // find the `host` of the node from each `mongo --port 2701n`
    > db.help()
 ```
-  - Setup the replicated instances from master node
+  - [Setup the replica set](https://docs.mongodb.com/manual/tutorial/deploy-replica-set/)
 ```shell script
    $ mongo --port 27017  # this is going to be the primary node
 ```
@@ -141,6 +141,17 @@ alias mongodb-disable='sudo systemctl disable replicated_mongodb1.service replic
    > rs.add("127.0.0.1:27018")  // OR rs.add("gio-Satellite-P70-A:27018") -- based on the host from db.serverStatus()
    > rs.add("127.0.0.1:27019")  // OR rs.add("gio-Satellite-P70-A:27019") -- based on the host from db.serverStatus()
    > rs.status()
+```
+  - [Force a Member to become Primary node](https://docs.mongodb.com/manual/tutorial/force-member-to-be-primary/)
+```shell script
+   $ mongo --port 27017  # this is going to be the primary node
+```
+```sql
+   > cfg = rs.conf()
+   > cfg.members[0].priority = 1
+   > cfg.members[1].priority = 0.5
+   > cfg.members[2].priority = 0.5
+   > rs.reconfig(cfg)
 ```
 
 ## Setting up Mongo to run in single instance (Ideal when Mongo won't be used for Kafka Connector)
